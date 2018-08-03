@@ -8,6 +8,8 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.shrung.blitzzsdk.adapter.Adapter_Participants;
@@ -24,12 +26,17 @@ import Listner.Callback;
 import SSUserService.UserServices;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class Activity_ActiveUsers extends BaseActivity implements Listener_OnLongClick {
 
     private static final String TAG = "Activity_ActiveUsers";
     @BindView(R.id.active_users_recycler_view)
     RecyclerView mActiveUsersRecyclerView;
+    @BindView(R.id.activate_user_ucid_edt)
+    EditText mActivateUserUcidEdt;
+    @BindView(R.id.activate_user)
+    Button mActivateUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -110,6 +117,7 @@ public class Activity_ActiveUsers extends BaseActivity implements Listener_OnLon
     @Override
     public void onLongClick(Model_Participants.Participant participant, int position) {
 
+        Toast.makeText(this,"Deactivating Selected user",Toast.LENGTH_SHORT).show();
         deactivateUser(String.valueOf(participant.getUCID()));
 
     }
@@ -131,6 +139,34 @@ public class Activity_ActiveUsers extends BaseActivity implements Listener_OnLon
             }
         });
 
+
+    }
+
+    private void activateUser(String ucid){
+
+        new UserServices().activateUser(ucid, new Callback() {
+            @Override
+            public void onSuccess(String json) {
+                Toast.makeText(getApplicationContext(), "User Activated", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, json);
+                getActiveUsers("");
+            }
+
+            @Override
+            public void onError(String json) {
+                Toast.makeText(getApplicationContext(), "Error in User Activated", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, json);
+            }
+        });
+
+    }
+
+    @OnClick(R.id.activate_user)
+    public void onViewClicked() {
+
+        if(!mActivateUserUcidEdt.getText().toString().equalsIgnoreCase("")){
+            activateUser(mActivateUserUcidEdt.getText().toString().trim());
+        }
 
     }
 }
