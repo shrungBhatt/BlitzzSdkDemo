@@ -34,6 +34,8 @@ public class MainActivity extends BaseActivity {
     Button mChangePassword;
     @BindView(R.id.active_users)
     Button mActiveUsers;
+    @BindView(R.id.role_managment)
+    Button mRoleManagement;
 
 
     @Override
@@ -66,7 +68,7 @@ public class MainActivity extends BaseActivity {
 
 
     @OnClick({R.id.add_user_button, R.id.sign_up_user, R.id.user_details, R.id.edit_profile,
-            R.id.change_password, R.id.active_users})
+            R.id.change_password, R.id.active_users, R.id.role_managment})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.add_user_button:
@@ -86,6 +88,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.active_users:
                 startActivity(new Intent(this,Activity_ActiveUsers.class));
+                break;
+            case R.id.role_managment:
+                startActivity(new Intent(this,Activity_RoleManagement.class));
                 break;
 
         }
