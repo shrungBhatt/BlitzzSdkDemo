@@ -49,7 +49,6 @@ public class Activity_InviteUser extends BaseActivity implements
     Spinner mUserRoleSpinner;
     Validator mValidator;
     private String mRoleCode;
-    private ArrayList<Model_RoleList.ROLELIST> mROLELISTArrayList;
 
 
     @Override
@@ -60,70 +59,17 @@ public class Activity_InviteUser extends BaseActivity implements
 
         BlitzzClient.getInstance().initiliazeSDK(SDKAUTHTOKEN);
 
+        getRoleList(TAG,mUserRoleSpinner,this,this);
+
         mValidator = new Validator(this);
         mValidator.setValidationListener(this);
 
 
-        getRoleList();
 
-        /**
-         * Chat services are not working properly according to the documentation. Caused by error
-         *java.lang.RuntimeException: applicationId is null. You must call QBSettings.getInstance().init(Context, String, String, String) before using the QuickBlox library.
-         */
-
-/*        ChatServices.getInstance().addChatConnectionListener(this);
-
-
-        ChatServices.getInstance().chatLogin(new SessionCallbacks() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(getApplicationContext(), "Login ==>  OnSuccess", Toast.LENGTH_SHORT).show();
-            }
-            @Override
-            public void onError(BlitzzResponseException blitzzResponseException) {
-                Toast.makeText(getApplicationContext(), "Login ==> " + blitzzResponseException.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });*/
 
 
     }
 
-    /**
-     * This method is giving response:
-     * {"ERRORMESSAGE":"User token not found.","ERRORTITLE":"User token missing","stackTrace":[],"suppressedExceptions":[]}
-     * I have followed the documentation sequentially and implemented all the steps above it.
-     */
-
-    private void getRoleList() {
-
-
-        new UserServices().getRoleList(new Callback() {
-            @Override
-            public void onSuccess(String json) {
-                // PREPARE ARRAY OF ROLELIST USING JSON.
-                LoggerConfig.infoLog(TAG, json);
-
-                try {
-                    JSONObject jsonObject = new JSONObject(json);
-                    Model_RoleList model_roleList;
-                    model_roleList = new Gson().fromJson(jsonObject.toString(), Model_RoleList.class);
-                    mROLELISTArrayList = model_roleList.getROLELIST();
-                    setAdapter(mUserRoleSpinner, mROLELISTArrayList);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onError(String json) {
-                Toast.makeText(getApplicationContext(), "Error in Role list", Toast.LENGTH_SHORT).show();
-                LoggerConfig.errorLog(TAG, json);
-            }
-        });
-
-    }
 
     private void inviteNewUser(String email) {
 
@@ -147,41 +93,24 @@ public class Activity_InviteUser extends BaseActivity implements
     }
 
 
-    private void setAdapter(Spinner spinner, ArrayList<Model_RoleList.ROLELIST> modelRoleLists) {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                R.layout.simple_spinner_layout, getRoleListNames(modelRoleLists));
-        adapter.setDropDownViewResource(R.layout.spinner_layout);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-    }
-
-    private ArrayList<String> getRoleListNames(ArrayList<Model_RoleList.ROLELIST> modelRoleLists) {
-
-        ArrayList<String> roleNames = new ArrayList<>();
-
-        for (Model_RoleList.ROLELIST rolelist : modelRoleLists) {
-
-            roleNames.add(rolelist.getDISPLAYNAME());
-
-        }
-
-        return roleNames;
-    }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-        switch (i) {
-            case 0:
-                mRoleCode = mROLELISTArrayList.get(i).getRCODE();
-                break;
-            case 1:
-                mRoleCode = mROLELISTArrayList.get(i).getRCODE();
-                break;
-            case 2:
-                mRoleCode = mROLELISTArrayList.get(i).getRCODE();
-                break;
+        if(mROLELISTArrayList != null) {
 
+            switch (i) {
+                case 0:
+                    mRoleCode = mROLELISTArrayList.get(i).getRCODE();
+                    break;
+                case 1:
+                    mRoleCode = mROLELISTArrayList.get(i).getRCODE();
+                    break;
+                case 2:
+                    mRoleCode = mROLELISTArrayList.get(i).getRCODE();
+                    break;
+
+            }
         }
 
     }

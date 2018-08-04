@@ -47,7 +47,7 @@ public class MainActivity extends BaseActivity {
         BlitzzClient.getInstance().initiliazeSDK(Const.SDKAUTHTOKEN);
 
 
-        BlitzzUser blitzzUser = new BlitzzUser("shrung1@gmail.com", "123456789");
+        BlitzzUser blitzzUser = new BlitzzUser("priyank@sculptsoft.com", "12345678");
         new UserServices().login(this, blitzzUser, new Callback() {
             @Override
             public void onSuccess(String s) {
