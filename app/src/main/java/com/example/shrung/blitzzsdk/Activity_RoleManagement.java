@@ -49,6 +49,7 @@ public class Activity_RoleManagement extends BaseActivity implements
         ButterKnife.bind(this);
 
         getRoleList(TAG, mRoleManagementSpinner, this, this);
+        getPermissionsList();
 
         mValidator = new Validator(this);
         mValidator.setValidationListener(this);
@@ -60,10 +61,31 @@ public class Activity_RoleManagement extends BaseActivity implements
 
 
         ArrayList<RoleList> arrayList = new ArrayList<>();
-        RoleList roleList = new RoleList(mRoleManagementRoleNameEdt.getText().toString().trim(),
+        RoleList roleList =
+                new RoleList(mRoleManagementRoleNameEdt.getText().toString().trim(),
                 mRoleCode);
         arrayList.add(roleList);
         new UserServices().updateRoleTitle(new Req_UpdateRoleName(arrayList), new Callback() {
+            @Override
+            public void onSuccess(String json) {
+                Toast.makeText(getApplicationContext(), "onSuccess", Toast.LENGTH_SHORT).show();
+                LoggerConfig.infoLog(TAG, json);
+            }
+
+            @Override
+            public void onError(String json) {
+                Toast.makeText(getApplicationContext(), "onError", Toast.LENGTH_SHORT).show();
+                LoggerConfig.errorLog(TAG, json);
+            }
+        });
+
+
+    }
+
+    private void getPermissionsList(){
+
+
+        new UserServices().getPermissionsByRole(new Callback() {
             @Override
             public void onSuccess(String json) {
                 Toast.makeText(getApplicationContext(), "onSuccess", Toast.LENGTH_SHORT).show();
